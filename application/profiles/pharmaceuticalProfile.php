@@ -74,7 +74,7 @@ $db->disconnect();
         </div>
         <div class="profile">
             <div class="actions">
-                <a class="action" id="edit-profile-btn">
+	    <a class="action" href = "../registration/editPharmaceuticalDetails.php?pharmaceuticalId=<?php echo $pharmaceuticalId; ?>"id="edit-profile-btn">
                     <i class="fas fa-edit"></i>
                     <span>Edit Profile</span>
                 </a>

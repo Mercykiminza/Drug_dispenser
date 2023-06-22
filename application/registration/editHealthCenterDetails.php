@@ -28,7 +28,7 @@ if (isset($_GET['hospitalId'])) {
 
 // Fetch hospital details from the database based on hospitalId
 $db = new Database();
-$query = "SELECT * FROM hospital WHERE hospitalId = ?";
+$query = "SELECT * FROM health_center WHERE healthCenterId = ?";
 $values = array($hospitalId);
 $hospitalData = $db->queryData($query, $values);
 
@@ -53,12 +53,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $phoneNumber = $_POST['phoneNumber'];
 
     // Perform update query
-    $query = "UPDATE hospital SET name = ?, location = ?, emailAddress = ?, phoneNumber = ? WHERE hospitalId = ?";
+    $query = "UPDATE health_center SET name = ?, location = ?, emailAddress = ?, " .
+	    "phoneNumber = ? WHERE healthCenterId = ?";
     $values = array($name, $location, $emailAddress, $phoneNumber, $hospitalId);
     $db->insertData($query, $values);
 
     // Redirect to the profile page
-    header("Location: hospitalProfile.php");
+    header("Location: ../profiles/healthCenterProfile.php?healthCenterId=$hospitalId");
     exit;
 }
 
@@ -93,7 +94,7 @@ $db->disconnect();
                 <input type="text" id="phoneNumber" name="phoneNumber" value="<?php echo $phoneNumber; ?>">
             </div>
             <div class="form-group">
-                <button type="submit">Update Details</button>
+                <input type="submit">
             </div>
         </form>
     </div>

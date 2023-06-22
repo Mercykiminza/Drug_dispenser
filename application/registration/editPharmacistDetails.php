@@ -59,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $db->insertData($query, $values);
 
     // Redirect to the profile page
-    header("Location: pharmacistProfile.php");
+    header("Location: ../profiles/pharmacistProfile.php?pharmacistId=$pharmacistId");
     exit;
 }
 
@@ -101,7 +101,7 @@ $db->disconnect();
                 <input type="tel" id="phoneNumber" name="phoneNumber" value="<?php echo $phoneNumber; ?>">
             </div>
             <div class="form-group">
-                <button type="submit">Update Details</button>
+                <input type="submit">
             </div>
         </form>
     </div>

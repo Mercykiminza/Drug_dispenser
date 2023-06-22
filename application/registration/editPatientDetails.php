@@ -63,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $db->insertData($query, $values);
 
     // Redirect to the profile page
-    header("Location: patientProfile.php");
+    header("Location: ../profiles/patientProfile.php?$patientId");
     exit;
 }
 
@@ -113,7 +113,7 @@ $db->disconnect();
                 <input type="date" id="dateOfBirth" name="dateOfBirth" value="<?php echo $dateOfBirth; ?>">
             </div>
             <div class="form-group">
-                <button type="submit">Update Details</button>
+                <input type="submit">
             </div>
         </form>
     </div>

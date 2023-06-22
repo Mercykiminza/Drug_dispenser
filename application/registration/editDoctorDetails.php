@@ -64,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $db->insertData($query, $values);
 
     // Redirect to the profile page
-    header("Location: doctorProfile.php");
+    header("Location: ../profiles/doctorProfile.php");
     exit;
 }
 
@@ -114,7 +114,7 @@ $db->disconnect();
                 <input type="text" id="healthCenterId" name="healthCenterId" value="<?php echo $healthCenterId; ?>">
             </div>
             <div class="form-group">
-                <button type="submit">Update Details</button>
+                <input type="submit">
             </div>
         </form>
     </div>

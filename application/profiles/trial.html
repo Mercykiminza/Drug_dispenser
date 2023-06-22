@@ -1,127 +1,4 @@
-<?php
-require_once('../database.php');
-session_start();
 
-// Check if the user is not logged in
-if (!isset($_SESSION['user'])) {
-  header('Location: ../authentication/login.php');
-  exit();
-}
-
-// Check if the user is administrator
-if ($_SESSION['user'] !== 'Administrator' && $_SESSION['user'] !== 'Patient') {
-  header('Location: ../permissionDenied.php');
-  exit();
-}
-
-// Check if patientId is provided in $_GET or $_SESSION
-if (isset($_GET['patientId'])) {
-	$patientId = $_GET['patientId'];
-} elseif (isset($_SESSION['patientId'])) {
-	$patientId = $_SESSION['patientId'];
-} else {
-	echo "Error: Patient ID not provided.";
-	exit;
-}
-
-// Fetch patient details from the database based on patientId
-$db = new Database();
-$query = "SELECT * FROM patient WHERE patientId = ?";
-$values = array($patientId);
-$patientData = $db->queryData($query, $values);
-
-// Check if patient exists
-if (empty($patientData)) {
-	echo "Error: Patient not found.";
-	exit;
-}
-
-// Extract patient details
-$patient = $patientData[0];
-$firstName = $patient['firstName'];
-$lastName = $patient['lastName'];
-
-// Fetch doctors assigned to the patient
-$query = "SELECT doctor.*, patient_doctor.patientDoctorId, patient_doctor.isPrimary,
-	hc.healthCenterId, hc.name FROM doctor INNER JOIN health_center AS hc ON
-	hc.healthCenterId = doctor.healthCenterId INNER JOIN patient_doctor ON
-	doctor.doctorId = patient_doctor.doctorId WHERE patient_doctor.patientId = ?";
-$assignedDoctors = $db->queryData($query, $values);
-
-// Fetch consultations for the patient
-$query = "SELECT consultation.*, patient_doctor.doctorId, doctor.firstName AS doctorFirstName, doctor.lastName AS doctorLastName
-	FROM consultation
-	INNER JOIN patient_doctor ON consultation.patientDoctorId = patient_doctor.patientDoctorId
-	INNER JOIN doctor ON patient_doctor.doctorId = doctor.doctorId
-	WHERE patient_doctor.patientId = ?
-	ORDER BY consultation.dateScheduled DESC LIMIT 12";
-$consultations = $db->queryData($query, $values);
-
-// Fetch latest 12 prescriptions for the patient
-$query = "SELECT prescription.*, dr.tradeName, doctor.firstName AS doctorFirstName, doctor.lastName AS doctorLastName 
-	FROM prescription
-	INNER JOIN consultation ON prescription.consultationId = consultation.consultationID
-	INNER JOIN patient_doctor ON consultation.patientDoctorId = patient_doctor.patientDoctorId
-	INNER JOIN doctor ON patient_doctor.doctorId = doctor.doctorId
-	INNER JOIN drug dr ON prescription.drugId = dr.drugId 
-	WHERE patient_doctor.patientId = ?
-	ORDER BY prescription.dateCreated DESC
-	LIMIT 12";
-$prescriptions = $db->queryData($query, $values);
-
-// Fetch doctors not assigned to the patient
-$query = "SELECT * FROM doctor WHERE doctorId NOT IN (SELECT doctorId FROM patient_doctor WHERE patientId = ?)";
-$availableDoctors = $db->queryData($query, $values);
-
-// Assign a doctor to the patient
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['assignDoctor'])) {
-	$doctorId = $_POST['doctorId'];
-	$isPrimary = $_POST['isPrimary'];
-
-	// Insert into patient_doctor table
-	$query = "INSERT INTO patient_doctor (patientId, doctorId, dateAssigned, isPrimary)
-		VALUES (?, ?, CURRENT_TIMESTAMP, ?)";
-	$values = array($patientId, $doctorId, $isPrimary);
-	$db->insertData($query, $values);
-
-	// Redirect to the same page after assigning the doctor
-	header("Location: patientDetails.php?patientId=$patientId");
-	exit;
-}
-
-// Schedule a consultation with a doctor
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['scheduleConsultation'])) {
-	$patientDoctorId = $_POST['patientDoctorId'];
-	$dateScheduled = $_POST['dateScheduled'];
-	$startTime = $_POST['startTime'];
-	$endTime = $_POST['endTime'];
-
-	// Insert into consultation table
-	$query = "INSERT INTO consultation (dateScheduled, startTime, endTime, patientDoctorId, 
-		status) VALUES ('$dateScheduled', '$startTime', '$endTime', $patientDoctorId, 
-		'pending')";
-	$db->insertData($query, []);
-	// Redirect to the same page after scheduling the consultation
-	header("Location: patientDetails.php?patientId=$patientId");
-	exit;
-}
-
-// Function to get the color class based on consultation status
-function getStatusColor($status) {
-	switch ($status) {
-	case 'requested':
-		return 'brown';
-	case 'completed':
-		return 'green';
-	case 'declined':
-		return 'red';
-	case 'defaulted':
-		return 'orange';
-	default:
-		return 'default';
-	}
-}
-?>
 
 <!DOCTYPE html>
 <html>
@@ -248,7 +125,6 @@ function getStatusColor($status) {
 				<thead>
 					<tr>
 						<th>ID</th>
-						<th>Doctor</th>
 						<th>Date Created</th>
 						<th>Medication</th>
 						<th>Dosage</th>
@@ -261,9 +137,9 @@ function getStatusColor($status) {
 					<?php foreach ($prescriptions as $prescription): ?>
 					<tr>
 						<td><?php echo $prescription['prescriptionId']; ?></td>
-						<td><?php echo $prescription['doctorFirstName'] . ' ' . $prescription['doctorLastName']; ?></td>
 						<td><?php echo $prescription['dateCreated']; ?></td>
-						<td><?php echo $prescription['tradeName']; ?></td>
+						<td><?php echo $prescription['dateCreated']; ?></td>
+						<td><?php echo $prescription['drugTradeName']; ?></td>
 						<td><?php echo $prescription['dosage']; ?></td>
 						<td><?php echo $prescription['quantity']; ?></td>
 						<td><?php echo $prescription['startDate']; ?></td>

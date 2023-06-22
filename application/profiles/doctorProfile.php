@@ -90,17 +90,17 @@ $db->disconnect();
             </div>
         </div>
         <div id="explore-profile" class="profile">
-            <a class="button-pill">
+	<a class="button-pill" href = "doctorDetails.php?doctorId=<?php echo $doctorId;?>">
                 Explore Profile
             </a>
         </div>
         <div class="profile">
             <div class="actions">
-                <a class="action" id="logout-btn">
+                <a class="action" href = "../authentication/logout.php" id="logout-btn">
                     <i class="fas fa-sign-out-alt"></i>
                     <span>Logout</span>
                 </a>
-                <a class="action" id="edit-profile-btn">
+                <a class="action" href = "../registration/editDoctorDetails.php" id="edit-profile-btn">
                     <i class="fas fa-edit"></i>
                     <span>Edit Profile</span>
                 </a>

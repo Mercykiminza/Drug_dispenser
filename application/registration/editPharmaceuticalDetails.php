@@ -57,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $db->insertData($query, $values);
 
     // Redirect to the profile page
-    header("Location: pharmaceuticalProfile.php");
+    header("Location: ../profiles/pharmaceuticalProfile.php?pharmaceuticalId=$pharmaceuticalId");
     exit;
 }
 
@@ -92,7 +92,7 @@ $db->disconnect();
                 <input type="text" id="phoneNumber" name="phoneNumber" value="<?php echo $phoneNumber; ?>">
             </div>
             <div class="form-group">
-                <button type="submit">Update Details</button>
+                <input type="submit">
             </div>
         </form>
     </div>

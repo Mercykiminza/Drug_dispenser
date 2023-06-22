@@ -9,7 +9,7 @@ if (!isset($_SESSION['user'])) {
 }
 
 // Check if the user is administrator
-if ($_SESSION['user'] !== 'Administrator' || $_SESSION['user'] !== 'Supervisor') {
+if ($_SESSION['user'] !== 'Administrator' && $_SESSION['user'] !== 'Supervisor') {
   header('Location: ../permissionDenied.php');
   exit();
 }

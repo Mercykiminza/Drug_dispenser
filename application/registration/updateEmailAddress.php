@@ -11,22 +11,22 @@ if (!isset($_SESSION['user'])) {
 
 // Check user role and corresponding ID in the session
 switch ($_SESSION['user']) {
-    case 'patient':
+    case 'Patient':
         $userId = $_SESSION['patientId'];
         $userTable = 'patient';
         $idField = 'patientId';
         break;
-    case 'doctor':
+    case 'Doctor':
         $userId = $_SESSION['doctorId'];
         $userTable = 'doctor';
         $idField = 'doctorId';
         break;
-    case 'supervisor':
+    case 'Supervisor':
         $userId = $_SESSION['supervisorId'];
         $userTable = 'supervisor';
         $idField = 'supervisorId';
         break;
-    case 'pharmacist':
+    case 'Pharmacist':
         $userId = $_SESSION['pharmacistId'];
         $userTable = 'pharmacist';
         $idField = 'pharmacistId';
