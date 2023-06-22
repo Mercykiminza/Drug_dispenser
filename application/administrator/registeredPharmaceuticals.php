@@ -1,3 +1,19 @@
+<?php
+session_start();
+
+// Check if the user is not logged in
+if (!isset($_SESSION['user'])) {
+  header('Location: ../authentication/login.php');
+  exit();
+}
+
+// Check if the user is administrator
+if ($_SESSION['user'] !== 'Administrator') {
+  header('Location: ../permissionDenied.php');
+  exit();
+}
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -52,7 +68,7 @@
                 foreach ($pharmaceuticals as $pharmaceutical) {
                     echo "<tr class='row'>";
                     echo "<td>" . $pharmaceutical['pharmaceuticalId'] . "</td>";
-                    echo "<td><a href='healthCenterProfile.php?healthCenterId=" . $pharmaceutical['pharmaceuticalId'] . "'>" . $pharmaceutical['name'] . "</a></td>";
+                    echo "<td><a href='../profiles/pharmaceuticalProfile.php?pharmaceuticalId=" . $pharmaceutical['pharmaceuticalId'] . "'>" . $pharmaceutical['name'] . "</a></td>";
                     echo "<td><a href='https://maps.google.com/?q=" . $pharmaceutical['location'] . "' target='_blank'>" . $pharmaceutical['location'] . "</a></td>";
                     echo "<td><a href='mailto:" . $pharmaceutical['emailAddress'] . "'>" . $pharmaceutical['emailAddress'] . "</a></td>";
                     echo "<td><a href='tel:" . $pharmaceutical['phoneNumber'] . "'>" . $pharmaceutical['phoneNumber'] . "</a></td>";

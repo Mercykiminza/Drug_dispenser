@@ -1,3 +1,19 @@
+<?php
+session_start();
+
+// Check if the user is not logged in
+if (!isset($_SESSION['user'])) {
+  header('Location: ../authentication/login.php');
+  exit();
+}
+
+// Check if the user is administrator
+if ($_SESSION['user'] !== 'Administrator') {
+  header('Location: ../permissionDenied.php');
+  exit();
+}
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -42,12 +58,12 @@
                 ?>
                 <tr>
 		    <td>
-		    <a href="pharmacistProfile.php?pharmacistId=<?php echo $pharmacistId; ?>">
+		    <a href="../profiles/pharmacistProfile.php?pharmacistId=<?php echo $pharmacistId; ?>">
 		    <?php echo $pharmacistId; ?>
 		    </a>
 		    </td>
 		    <td>
-		    <a href="pharmacistProfile.php?pharmacistId=<?php echo $pharmacistId; ?>">
+		    <a href="../profiles/pharmacistProfile.php?pharmacistId=<?php echo $pharmacistId; ?>">
 		    <?php echo $firstName . ' ' . $lastName; ?>
 		    </a>
 		    </td>
@@ -61,7 +77,7 @@
 		    </a>
 		    </td>
 		    <td>
-		    <a href="pharmacyProfile.php?pharmacyId=<?php echo $pharmacyId; ?>">
+		    <a href="../profiles/pharmacyProfile.php?pharmacyId=<?php echo $pharmacyId; ?>">
 		    <?php echo $pharmacyName; ?>
 		    </td>
                 </tr>

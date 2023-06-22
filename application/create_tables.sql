@@ -1,3 +1,9 @@
+CREATE TABLE IF NOT EXISTS administrator (
+  administratorId INT AUTO_INCREMENT PRIMARY KEY,
+  emailAddress VARCHAR(128) NOT NULL,
+  passwordHash VARCHAR(255) NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS patient (
   patientId INT AUTO_INCREMENT PRIMARY KEY,
   firstName VARCHAR(128) NOT NULL,

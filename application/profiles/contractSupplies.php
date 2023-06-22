@@ -1,3 +1,21 @@
+<?php
+require_once('../database.php');
+session_start();
+
+// Check if the user is not logged in
+if (!isset($_SESSION['user'])) {
+	header('Location: ../authentication/login.php');
+	exit();
+}
+
+// Check if the user is administrator
+if ($_SESSION['user'] !== 'Administrator' && $_SESSION['user'] !== 'Pharmacist' &&
+	$_SESSION['user'] !== 'Pharmaceutical') {
+	header('Location: ../permissionDenied.php');
+	exit();
+}
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -38,7 +56,9 @@ if (isset($_GET['contractId'])) {
 		GROUP BY supply.supplyId";
 	$values = [$contractId];
 	$supplies = $db->queryData($query, $values);
-
+	echo "<link rel = 'stylesheet' type = 'text/css' href = 'styles.css'>";
+	echo "<link rel='stylesheet' type='text/css' href='../administrator/styles.css'>";
+	echo "<div class = 'container'>";
 	echo '<table>';
 	echo '<thead>';
 	echo '<tr>';
@@ -72,6 +92,7 @@ if (isset($_GET['contractId'])) {
 
 	echo '</tbody>';
 	echo '</table>';
+	echo '</div>';
 
 	// Disconnect from the database
 	$db->disconnect();

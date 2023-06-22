@@ -1,3 +1,19 @@
+<?php
+session_start();
+
+// Check if the user is not logged in
+if (!isset($_SESSION['user'])) {
+  header('Location: ../authentication/login.php');
+  exit();
+}
+
+// Check if the user is administrator
+if ($_SESSION['user'] !== 'Administrator') {
+  header('Location: ../permissionDenied.php');
+  exit();
+}
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -30,8 +46,8 @@
                 $db = new Database();
 
                 // Query the prescription, consultation, doctor, patient, and drug tables to retrieve relevant data
-                $query = "SELECT p.prescriptionId, d.firstName AS doctorFirstName, d.lastName AS doctorLastName, 
-                          pt.firstName AS patientFirstName, pt.lastName AS patientLastName, dr.tradeName AS drugTradeName, 
+                $query = "SELECT p.prescriptionId, d.firstName AS doctorFirstName, d.doctorId, d.lastName AS doctorLastName, 
+                          pt.firstName AS patientFirstName, pt.lastName AS patientLastName, pt.patientId, dr.tradeName AS drugTradeName, 
                           p.dosage, p.quantity, p.startDate, p.endDate, p.dateCreated 
                           FROM prescription p 
                           INNER JOIN consultation c ON p.consultationId = c.consultationID 
@@ -54,12 +70,14 @@
                     $startDate = $prescription['startDate'];
                     $endDate = $prescription['endDate'];
                     $dateCreated = $prescription['dateCreated'];
+                    $doctorId = $prescription['doctorId'];
+                    $patientId = $prescription['patientId'];
 
                     ?>
                     <tr>
-                        <td><a href="prescriptionDetails.php?prescriptionId=<?php echo $prescriptionId; ?>"><?php echo $prescriptionId; ?></a></td>
-                        <td><a href="doctorProfile.php?doctorId=<?php echo $doctorId; ?>"><?php echo $doctorFirstName . ' ' . $doctorLastName; ?></a></td>
-                        <td><a href="patientProfile.php?patientId=<?php echo $patientId; ?>"><?php echo $patientFirstName . ' ' . $patientLastName; ?></a></td>
+                        <td><?php echo $prescriptionId; ?></td>
+                        <td><a href="../profiles/doctorProfile.php?doctorId=<?php echo $doctorId; ?>"><?php echo $doctorFirstName . ' ' . $doctorLastName; ?></a></td>
+                        <td><a href="../profiles/patientProfile.php?patientId=<?php echo $patientId; ?>"><?php echo $patientFirstName . ' ' . $patientLastName; ?></a></td>
                         <td><?php echo $drugTradeName; ?></td>
                         <td><?php echo $dosage; ?></td>
                         <td><?php echo $quantity; ?></td>

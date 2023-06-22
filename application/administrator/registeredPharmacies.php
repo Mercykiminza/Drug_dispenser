@@ -1,32 +1,24 @@
+<?php
+session_start();
+
+// Check if the user is not logged in
+if (!isset($_SESSION['user'])) {
+  header('Location: ../authentication/login.php');
+  exit();
+}
+
+// Check if the user is administrator
+if ($_SESSION['user'] !== 'Administrator') {
+  header('Location: ../permissionDenied.php');
+  exit();
+}
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
     <title>Registered Pharmacies</title>
     <link href = "styles.css" rel = "stylesheet">
-    </style>
-    <script>
-        // JavaScript for pagination
-        function changePage(page) {
-            var rows = document.getElementsByClassName('row');
-            var itemsPerPage = 10;
-            var startIndex = (page - 1) * itemsPerPage;
-            var endIndex = startIndex + itemsPerPage;
-
-            for (var i = 0; i < rows.length; i++) {
-                if (i >= startIndex && i < endIndex) {
-                    rows[i].style.display = 'table-row';
-                } else {
-                    rows[i].style.display = 'none';
-                }
-            }
-
-            var paginationLinks = document.getElementsByClassName('pagination-link');
-            for (var j = 0; j < paginationLinks.length; j++) {
-                paginationLinks[j].classList.remove('active');
-            }
-            paginationLinks[page - 1].classList.add('active');
-        }
-    </script>
 </head>
 <body>
     <div class="container">
@@ -53,7 +45,7 @@
                 foreach ($pharmacies as $pharmacy) {
                     echo "<tr class='row'>";
                     echo "<td>" . $pharmacy['pharmacyId'] . "</td>";
-                    echo "<td><a href='pharmacyProfile.php?pharmacyId=" . $pharmacy['pharmacyId'] . "'>" . $pharmacy['name'] . "</a></td>";
+                    echo "<td><a href='../profiles/pharmacyProfile.php?pharmacyId=" . $pharmacy['pharmacyId'] . "'>" . $pharmacy['name'] . "</a></td>";
                     echo "<td><a href='https://maps.google.com/?q=" . $pharmacy['location'] . "' target='_blank'>" . $pharmacy['location'] . "</a></td>";
                     echo "<td><a href='mailto:" . $pharmacy['emailAddress'] . "'>" . $pharmacy['emailAddress'] . "</a></td>";
                     echo "<td><a href='tel:" . $pharmacy['phoneNumber'] . "'>" . $pharmacy['phoneNumber'] . "</a></td>";

@@ -1,3 +1,19 @@
+<?php
+session_start();
+
+// Check if the user is not logged in
+if (!isset($_SESSION['user'])) {
+  header('Location: ../authentication/login.php');
+  exit();
+}
+
+// Check if the user is administrator
+if ($_SESSION['user'] !== 'Administrator') {
+  header('Location: ../permissionDenied.php');
+  exit();
+}
+?>
+
 <!DOCTYPE html>
 <html>
 <head>

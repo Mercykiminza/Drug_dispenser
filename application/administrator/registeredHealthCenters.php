@@ -1,17 +1,34 @@
+
+<?php
+session_start();
+
+// Check if the user is not logged in
+if (!isset($_SESSION['user'])) {
+  header('Location: ../authentication/login.php');
+  exit();
+}
+
+// Check if the user is administrator
+if ($_SESSION['user'] !== 'Administrator') {
+  header('Location: ../permissionDenied.php');
+  exit();
+}
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Registered Hospitals</title>
+    <title>Registered Health Centers</title>
     <link rel="stylesheet" type="text/css" href="styles.css">
     <script src="pagination.js"></script>
 </head>
 <body>
     <div class="container">
-        <h2>Registered Hospitals</h2>
+        <h2>Registered Health Centers</h2>
         <table>
             <thead>
                 <tr>
-                    <th>Hospital ID</th>
+                    <th>Health Center ID</th>
                     <th>Name</th>
                     <th>Location</th>
                     <th>Email Address</th>
@@ -45,12 +62,12 @@
                     ?>
                     <tr>
 			<td>
-			<a href="hospitalDetails.php?hospitalId=<?php echo $hospitalId; ?>">
+			<a href="../profiles/healthCenterProfile.php?healthCenterId=<?php echo $hospitalId; ?>">
 			<?php echo $hospitalId; ?>
 			</a>
 			</td>
 			<td>
-			<a href="hospitalDetails.php?hospitalId=<?php echo $hospitalId; ?>">
+			<a href="../profiles/healthCenterProfile.php?healthCenterId=<?php echo $hospitalId; ?>">
 			<?php echo $name; ?>
 			</a>
 			</td>

@@ -1,57 +1,69 @@
 <?php
-require_once('../database.php');
 session_start();
+require_once('../database.php');
 
-// Check if doctorId is provided in $_GET or $_SESSION
-if (isset($_GET['doctorId'])) {
-    $doctorId = $_GET['doctorId'];
-    $_SESSION['doctorId'] = $doctorId;
-} elseif (isset($_SESSION['doctorId'])) {
-    $doctorId = $_SESSION['doctorId'];
+// Check if the user is not logged in
+if (!isset($_SESSION['user'])) {
+  header('Location: ../authentication/login.php');
+  exit();
+}
+
+// Check if the user is administrator
+if ($_SESSION['user'] !== 'Administrator' && $_SESSION['user'] !== 'Patient') {
+  header('Location: ../permissionDenied.php');
+  exit();
+}
+
+// Check if patientId is provided in $_GET or $_SESSION
+if (isset($_GET['patientId'])) {
+    $patientId = $_GET['patientId'];
+    $_SESSION['patientId'] = $patientId;
+} elseif (isset($_SESSION['patientId'])) {
+    $patientId = $_SESSION['patientId'];
 } else {
-    echo "Error: Doctor ID not provided.";
+    echo "Error: Patient ID not provided.";
     exit;
 }
 
-// Fetch doctor details from the database based on doctorId
+// Fetch patient details from the database based on patientId
 $db = new Database();
-$query = "SELECT * FROM doctor WHERE doctorId = ?";
-$values = array($doctorId);
-$doctorData = $db->queryData($query, $values);
+$query = "SELECT * FROM patient WHERE patientId = ?";
+$values = array($patientId);
+$patientData = $db->queryData($query, $values);
 
-// Check if doctor exists
-if (empty($doctorData)) {
-    echo "Error: Doctor not found.";
+// Check if patient exists
+if (empty($patientData)) {
+    echo "Error: Patient not found.";
     exit;
 }
 
-// Extract doctor details
-$doctor = $doctorData[0];
-$firstName = $doctor['firstName'];
-$lastName = $doctor['lastName'];
-$gender = $doctor['gender'];
-$emailAddress = $doctor['emailAddress'];
-$phoneNumber = $doctor['phoneNumber'];
-$specialization = $doctor['specialization'];
-$healthCenterId = $doctor['healthCenterId'];
+// Extract patient details
+$patient = $patientData[0];
+$firstName = $patient['firstName'];
+$lastName = $patient['lastName'];
+$gender = $patient['gender'];
+$emailAddress = $patient['emailAddress'];
+$phoneNumber = $patient['phoneNumber'];
+$location = $patient['location'];
+$dateOfBirth = $patient['dateOfBirth'];
 
-// Update doctor details
+// Update patient details
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $firstName = $_POST['firstName'];
     $lastName = $_POST['lastName'];
     $gender = $_POST['gender'];
     $emailAddress = $_POST['emailAddress'];
     $phoneNumber = $_POST['phoneNumber'];
-    $specialization = $_POST['specialization'];
-    $healthCenterId = $_POST['healthCenterId'];
+    $location = $_POST['location'];
+    $dateOfBirth = $_POST['dateOfBirth'];
 
     // Perform update query
-    $query = "UPDATE doctor SET firstName = ?, lastName = ?, gender = ?, emailAddress = ?, phoneNumber = ?, specialization = ?, healthCenterId = ? WHERE doctorId = ?";
-    $values = array($firstName, $lastName, $gender, $emailAddress, $phoneNumber, $specialization, $healthCenterId, $doctorId);
+    $query = "UPDATE patient SET firstName = ?, lastName = ?, gender = ?, emailAddress = ?, phoneNumber = ?, location = ?, dateOfBirth = ? WHERE patientId = ?";
+    $values = array($firstName, $lastName, $gender, $emailAddress, $phoneNumber, $location, $dateOfBirth, $patientId);
     $db->insertData($query, $values);
 
     // Redirect to the profile page
-    header("Location: doctorProfile.php");
+    header("Location: patientProfile.php");
     exit;
 }
 
@@ -61,14 +73,14 @@ $db->disconnect();
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Edit Doctor Details</title>
+    <title>Edit Patient Details</title>
     <link rel="stylesheet" type="text/css" href="styles.css">
 </head>
 <body>
     <div class="container">
-        <h1>Edit Doctor Details</h1>
+        <h1>Edit Patient Details</h1>
         <form action="" method="POST">
-            <input type="hidden" name="doctorId" value="<?php echo $doctorId; ?>">
+            <input type="hidden" name="patientId" value="<?php echo $patientId; ?>">
             <div class="form-group">
                 <label for="firstName">First Name:</label>
                 <input type="text" id="firstName" name="firstName" value="<?php echo $firstName; ?>">
@@ -93,12 +105,12 @@ $db->disconnect();
                 <input type="text" id="phoneNumber" name="phoneNumber" value="<?php echo $phoneNumber; ?>">
             </div>
             <div class="form-group">
-                <label for="specialization">Specialization:</label>
-                <input type="text" id="specialization" name="specialization" value="<?php echo $specialization; ?>">
+                <label for="location">Location:</label>
+                <input type="text" id="location" name="location" value="<?php echo $location; ?>">
             </div>
             <div class="form-group">
-                <label for="healthCenterId">Health Center ID:</label>
-                <input type="text" id="healthCenterId" name="healthCenterId" value="<?php echo $healthCenterId; ?>">
+                <label for="dateOfBirth">Date of Birth:</label>
+                <input type="date" id="dateOfBirth" name="dateOfBirth" value="<?php echo $dateOfBirth; ?>">
             </div>
             <div class="form-group">
                 <button type="submit">Update Details</button>

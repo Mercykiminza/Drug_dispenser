@@ -2,6 +2,18 @@
 require_once('../database.php');
 session_start();
 
+// Check if the user is not logged in
+if (!isset($_SESSION['user'])) {
+  header('Location: ../authentication/login.php');
+  exit();
+}
+
+// Check if the user is administrator
+if ($_SESSION['user'] !== 'Administrator' && $_SESSION['user'] !== 'Supervisor') {
+  header('Location: ../permissionDenied.php');
+  exit();
+}
+
 // Check if pharmaceuticalId is provided in $_GET or $_SESSION
 if (isset($_GET['pharmaceuticalId'])) {
     $pharmaceuticalId = $_GET['pharmaceuticalId'];

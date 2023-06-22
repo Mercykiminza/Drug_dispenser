@@ -1,0 +1,63 @@
+.
+├── administrator
+│   ├── administratorDashboard.css
+│   ├── administratorDashboard.php
+│   ├── assignedContracts.php
+│   ├── assignedPatients.php
+│   ├── prescriptions.php
+│   ├── registeredContracts.php
+│   ├── registeredDoctors.php
+│   ├── registeredHealthCenters.php
+│   ├── registeredPatients.php
+│   ├── registeredPharmaceuticals.php
+│   ├── registeredPharmacies.php
+│   ├── registeredPharmacists.php
+│   ├── registeredSupervisors.php
+│   └── styles.css
+├── authentication
+│   ├── login.php
+│   └── logout.php
+├── configuration.php
+├── create_tables.sql
+├── database.php
+├── file.txt
+├── index.php
+├── permissionDenied.php
+├── profiles
+│   ├── consultationProfile.css
+│   ├── consultationProfile.php
+│   ├── contractSupplies.php
+│   ├── doctorDetails.php
+│   ├── doctorProfile.php
+│   ├── healthCenterProfile.php
+│   ├── patientDetails.php
+│   ├── patientProfile.php
+│   ├── pharmaceuticalProfile.php
+│   ├── pharmacistProfile.php
+│   ├── pharmacyProfile.php
+│   ├── profile.css
+│   ├── profile.png
+│   ├── styles.css
+│   └── supervisorProfile.php
+├── registration
+│   ├── editContractDetails.php
+│   ├── editDoctorDetails.php
+│   ├── editHealthCenterDetails.php
+│   ├── editPatientDetails.php
+│   ├── editPharmaceuticalDetails.php
+│   ├── editPharmacistDetails.php
+│   ├── editPharmacyDetails.php
+│   ├── editSupervisorDetails.php
+│   ├── registerDoctor.php
+│   ├── registerHospital.php
+│   ├── registerPatient.php
+│   ├── registerPharmaceutical.php
+│   ├── registerPharmacist.php
+│   ├── registerPharmacy.php
+│   ├── registerSupervisor.php
+│   ├── styles.css
+│   ├── updateEmailAddress.php
+│   └── updatePassword.php
+└── utilities.php
+
+4 directories, 56 files

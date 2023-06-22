@@ -1,3 +1,19 @@
+<?php
+session_start();
+
+// Check if the user is not logged in
+if (!isset($_SESSION['user'])) {
+  header('Location: ../authentication/login.php');
+  exit();
+}
+
+// Check if the user is administrator
+if ($_SESSION['user'] !== 'Administrator') {
+  header('Location: ../permissionDenied.php');
+  exit();
+}
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -43,19 +59,19 @@
                 ?>
                 <tr>
 		    <td>
-		    <a href="supervisorProfile.php?supervisorId=<?php echo $supervisorId; ?>">
+		    <a href="../profiles/supervisorProfile.php?supervisorId=<?php echo $supervisorId; ?>">
 		    <?php echo $supervisorId; ?>
 		    </a>
 		    </td>
 		    <td>
-		    <a href="supervisorProfile.php?supervisorId=<?php echo $supervisorId; ?>">
+		    <a href="../profiles/supervisorProfile.php?supervisorId=<?php echo $supervisorId; ?>">
 		    <?php echo $firstName . ' ' . $lastName; ?>
 		    </a>
 		    </td>
                     <td><a href="mailto:<?php echo $emailAddress; ?>"><?php echo $emailAddress; ?></a></td>
                     <td><a href="tel:<?php echo $phoneNumber; ?>"><?php echo $phoneNumber; ?></a></td>
 		    <td>
-		    <a href="pharmaceuticalProfile.php?pharmaceuticalId=<?php echo $pharmaceuticalId; ?>">
+		    <a href="../profiles/pharmaceuticalProfile.php?pharmaceuticalId=<?php echo $pharmaceuticalId; ?>">
 		    <?php echo $pharmaceuticalCompany; ?>
 		    </a>
 		    </td>
